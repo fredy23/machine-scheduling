@@ -60,5 +60,4 @@ function ms_mip(m::Int64, p::Vector{Int64})
 	else
 		return status, nothing, nothing
 	end
-
 end
