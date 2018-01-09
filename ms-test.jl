@@ -3,9 +3,6 @@
     algorytmów szeregowania zadań
 =#
 
-include("ms-opt.jl")
-include("ms-algo.jl")
-
 # Funkcja wczytująca dane problemu
 
 function read_data(file_handler)
@@ -51,6 +48,9 @@ end
 
 # Rozwiązanie problemu
 
+include("opt/ms-opt.jl")
+include("ms-algo.jl")
+
 # Algorytm listowy
 
 ts, cmax = ms_list_algo(m, p)
@@ -62,11 +62,12 @@ ts, cmax = ms_lpt_algo(m, p)
 println("Algorytm LPT: ", cmax)
 
 # Optimum
-pv = map(v -> v[2], p)
-(status, fval, x) = ms_mip(m, pv)
 
-if status == :Optimal
-	@printf "Optimum: %d\n" fval
-else
-    @printf "Optimum: -\n"
-end
+pv = map(v -> v[2], p)
+
+cmax = ms_val(m, pv, false)
+println("OPT: ", cmax)
+
+# Optimum LB
+cmax = ms_val(m, pv, true)
+println("OPT LB: ", cmax)
