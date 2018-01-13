@@ -29,3 +29,24 @@ function ms_lpt_algo(m::Int64, p::Array{Tuple{Int64, Int64}})
 
     return ts, cmax
 end
+
+# Funkcja zwracająca indeks najbardziej obciążonej maszyny i jej obciążenie (=cmax)
+function max_load(m::Int64, sch::Array{Array, 1})
+
+	ind = 0
+	load = 0
+
+	for i = 1:m
+		l = 0
+		for t in sch[i]
+			l = l + t[2]
+		end
+		if l > load
+			load = l
+			ind = i
+		end
+	end
+
+	return ind, load
+
+end

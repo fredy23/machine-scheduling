@@ -2,29 +2,8 @@
 	Symulowane wyżarzanie dla problemu przydziału prac na równoległych maszynach
 =#
 
-# zwraca indeks najbardziej obciążonej maszyny i jej obciążenie (=cmax)
-function max_load(m::Int64, sch::Array{Array, 1})
-
-	ind = 0
-	load = 0
-
-	for i = 1:m
-		l = 0
-		for t in sch[i]
-			l = l + t[2]
-		end
-		if l > load
-			load = l
-			ind = i
-		end
-	end
-
-	return ind, load
-
-end
-
 # generuje sąsiednie rozwiązanie dopuszczalne z otoczenia
-function ms_neighbour(m::Int64, sch::Array{Array, 1})
+function ms_random_neighbour(m::Int64, sch::Array{Array, 1})
 
 	newsch = copy(sch)
 	for i = 1:m
@@ -35,9 +14,9 @@ function ms_neighbour(m::Int64, sch::Array{Array, 1})
 	roll = rand(1:2)
 
 	if roll == 1
-		ms_neighbour_reassign(m, newsch)
+		ms_random_neighbour_reassign(m, newsch)
 	else
-		ms_neighbour_interchange(m, newsch)
+		ms_random_neighbour_interchange(m, newsch)
 	end
 
 	return newsch
@@ -45,7 +24,7 @@ function ms_neighbour(m::Int64, sch::Array{Array, 1})
 end
 
 # przypisuje zadanie najbardziej obciążonej maszyny innej maszynie
-function ms_neighbour_reassign(m::Int64, sch::Array{Array, 1})
+function ms_random_neighbour_reassign(m::Int64, sch::Array{Array, 1})
 
 	# najbardziej obciążona maszyna
 	i, _ = max_load(m, sch)
@@ -69,7 +48,7 @@ function ms_neighbour_reassign(m::Int64, sch::Array{Array, 1})
 end
 
 # zamienia przypisane zadania maszyny najbardziej obciążonej i innej maszyny
-function ms_neighbour_interchange(m::Int64, sch::Array{Array, 1})
+function ms_random_neighbour_interchange(m::Int64, sch::Array{Array, 1})
 
 	# najbardziej obciążona maszyna
 	i, _ = max_load(m, sch)
@@ -125,7 +104,7 @@ function ms_sa_algo(m::Int64, s::Array{Array, 1})
 	for i = 1:numIt
 		for j = 1:numNeighbour
 			# sprawdzanie sąsiedztwa
-			newsch = ms_neighbour(m, sch)
+			newsch = ms_random_neighbour(m, sch)
 			_, cmax = max_load(m, sch)
 			_, newcmax = max_load(m, newsch)
 
