@@ -48,22 +48,36 @@ end
 
 # Rozwiązanie problemu
 
-include("opt/ms-opt.jl")
+#include("opt/ms-opt.jl")
 include("ms-algo.jl")
+include("ms-sa.jl")
 
 # Algorytm listowy
 
-ts, cmax = ms_list_algo(m, p)
-println("Algorytm listowy: ", cmax)
+ts1, cmax1 = ms_list_algo(m, p)
+println("Algorytm listowy: ", cmax1)
 
 # Algorytm LPT
 
-ts, cmax = ms_lpt_algo(m, p)
-println("Algorytm LPT: ", cmax)
+ts2, cmax2 = ms_lpt_algo(m, p)
+println("Algorytm LPT: ", cmax2)
+
+# Symulowane wyżarzanie
+
+ts = nothing
+
+if cmax1 < cmax2
+	ts = ts1
+else
+	ts = ts2
+end
+
+_, cmax = ms_sa_algo(m, ts)
+println("Symulowane wyżarzanie: ", cmax)
 
 # Optimum
 
-pv = map(v -> v[2], p)
+#=pv = map(v -> v[2], p)
 
 cmax = ms_val(m, pv, false)
 println("OPT: ", cmax)
@@ -71,3 +85,4 @@ println("OPT: ", cmax)
 # Optimum LB
 cmax = ms_val(m, pv, true)
 println("OPT LB: ", cmax)
+=#

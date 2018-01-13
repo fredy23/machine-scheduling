@@ -6,12 +6,12 @@
 function ms_list_algo(m::Int64, p::Array{Tuple{Int64, Int64}})
 
     mload = zeros(Int64, m) # obciążenie maszyn
-    ts = Tuple{Int64, Int64}[] # przydział zadań do maszyn
+    ts = Array[Tuple{Int64, Int64}[] for i in 1:m] # przydział zadań do maszyn
 
     for v in p
         i = indmin(mload) # indeks najmniej obciążonej maszyny
         mload[i] += v[2]
-        push!(ts, (v[1], i))
+        push!(ts[i], (v[1], v[2]))
     end
 
     cmax = maximum(mload)
