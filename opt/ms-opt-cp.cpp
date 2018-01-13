@@ -52,60 +52,37 @@ int main(int argc, char **argv) {
 
         IloModel model(env);
         IloIntVar Cmax(env);
-        IntMatrix3 X(env, tasks);
+        IntMatrix X(env, machines);
 
-        for(int j = 0; j < tasks; j++) {
+        for(int i = 0; i < machines; i++) {
 
-            X[j] = IntMatrix(env, machines);
-
-            for(int k = 0; k < machines; k++) {
-                X[j][k] = IloIntVarArray(env, horizon, 0, 1);
-            }
+            X[i] = IloIntVarArray(env, tasks, 0, 1);
         }
 
         // Ograniczenia
 
-        // Ograniczenia na czas rozpoczęcia - każde zadanie może się rozpocząć tylko raz
+        // Ograniczenia przydziału - zadanie może się wykowywać tylko na jednej maszynie
         for(int j = 0; j < tasks; j++) {
 
             IloExpr expr(env);
 
-            for(int k = 0; k < machines; k++) {
-                expr += IloSum(X[j][k]);
+            for(int i = 0; i < machines; i++) {
+                expr += X[i][j];
             }
 
             model.add(expr == 1);
         }
 
-        // Ograniczenia na niekolidujące wykonanie na maszynach
-        for(int k = 0; k < machines; k++) {
-            for(int t = 0; t < horizon; t++) {
-
-                IloExpr expr(env);
-
-                for(int j = 0; j < tasks; j++) {
-                    int m = std::max(0, t - tasks_times[j]);
-
-                    for(int s = m; s < t; s++)
-                        expr += X[j][k][s];
-                }
-
-                model.add(expr <= 1);
-            }
-        }
-
         // Ogranczenia całkowitego czasu wykonania wszystkich zadań
-        for(int j = 0; j < tasks; j++) {
-            for(int k = 0; k < machines; k++) {
+        for(int i = 0; i < machines; i++) {
 
-                IloExpr expr(env);
+            IloExpr expr(env);
 
-                for(int t = 0; t < horizon; t++) {
-                    expr += ((t + tasks_times[j]) * X[j][k][t]);
-                }
-
-                model.add(Cmax >= expr);
+            for(int j = 0; j < tasks; j++) {
+                expr += tasks_times[j] * X[i][j];
             }
+
+            model.add(Cmax >= expr);
         }
 
         // Funkcja celu
