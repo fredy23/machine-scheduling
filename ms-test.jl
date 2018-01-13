@@ -51,6 +51,7 @@ end
 #include("opt/ms-opt.jl")
 include("ms-algo.jl")
 include("ms-sa.jl")
+include("ms-ls.jl")
 
 # Algorytm listowy
 
@@ -62,8 +63,7 @@ println("Algorytm listowy: ", cmax1)
 ts2, cmax2 = ms_lpt_algo(m, p)
 println("Algorytm LPT: ", cmax2)
 
-# Symulowane wyżarzanie
-
+# Wybór lepszego rozwiązanie początkowego do heurystyk
 ts = nothing
 
 if cmax1 < cmax2
@@ -72,6 +72,11 @@ else
 	ts = ts2
 end
 
+# Local search
+_, cmax = ms_ls_algo(m, ts)
+println("Local search: ", cmax)
+
+# Symulowane wyżarzanie
 _, cmax = ms_sa_algo(m, ts)
 println("Symulowane wyżarzanie: ", cmax)
 
