@@ -48,10 +48,11 @@ end
 
 # Rozwiązanie problemu
 
-#include("opt/ms-opt.jl")
+include("opt/ms-opt.jl")
 include("ms-algo.jl")
 include("ms-sa.jl")
 include("ms-ls.jl")
+include("ms-tabu.jl")
 
 # Algorytm listowy
 
@@ -80,9 +81,13 @@ println("Local search: ", cmax)
 _, cmax = ms_sa_algo(m, ts)
 println("Symulowane wyżarzanie: ", cmax)
 
+# Tabu search
+_, cmax = ms_tabu_algo(m, ts)
+println("Tabu search: ", cmax)
+
 # Optimum
 
-#=pv = map(v -> v[2], p)
+pv = map(v -> v[2], p)
 
 cmax = ms_val(m, pv, false)
 println("OPT: ", cmax)
@@ -90,4 +95,3 @@ println("OPT: ", cmax)
 # Optimum LB
 cmax = ms_val(m, pv, true)
 println("OPT LB: ", cmax)
-=#
